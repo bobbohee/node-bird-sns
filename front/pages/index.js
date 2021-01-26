@@ -1,18 +1,16 @@
+import React from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
+
+import 'antd/dist/antd.css';
 import AppLayout from "../components/AppLayout";
-import "antd/dist/antd.css";
 
 const Home = () => {
     return (
         <>
             <Head>
-
+                <title>NodeBird</title>
             </Head>
             <AppLayout>
-                <Link href="/about">
-                    <a>about</a>
-                </Link>
                 <div>Hello, Next!</div>
             </AppLayout>
         </>

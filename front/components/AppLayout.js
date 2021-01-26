@@ -1,23 +1,35 @@
 import React from 'react';
-import { Menu, Input, Space } from 'antd';
+import Link from 'next/link';
+import {Menu, Input, Space, Button} from 'antd';
 
-const { SubMenu } = Menu;
-const { Search } = Input;
+const {Search} = Input;
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({children}) => {
     return (
         <div>
             <Menu mode="horizontal">
-                <SubMenu key="bird" title="Bird">
-                    <Menu.Item key="profile">Profile</Menu.Item>
-                </SubMenu>
+                <Menu.Item key="home">
+                    <Link href="/">
+                        <a>Home</a>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="profile">
+                    <Link href="/profile">
+                        <a>Profile</a>
+                    </Link>
+                </Menu.Item>
                 <Menu.Item key="search">
                     <Space direction="vertical">
-                        <Search placeholder="search..." style={{ verticalAlign: "middle"}}/>
+                        <Search placeholder="search..." style={{verticalAlign: "middle"}}/>
                     </Space>
                 </Menu.Item>
             </Menu>
-            { children }
+            <Link href="/join">
+                <a>
+                    <Button>Signup</Button>
+                </a>
+            </Link>
+            {children}
         </div>
     )
 };
