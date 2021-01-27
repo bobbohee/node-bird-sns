@@ -12,13 +12,23 @@ const Join = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isCheck, setIsCheck] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [isCheckError, setIsCheckError] = useState(false);
 
     const layout = {
         labelCol: {span: 3},
         wrapperCol: {span: 4},
     };
 
-    const onSubmit = () => {};
+    const onFinish = (e) => {
+        if (password !== confirmPassword)
+            return setPasswordError(true);
+        if (!isCheck)
+            return setIsCheckError(true)
+        console.log({
+            login, name, password, confirmPassword, isCheck
+        });
+    };
 
     const onChangeId = (e) => {
         setLogin(e.target.value);
@@ -33,17 +43,31 @@ const Join = () => {
     };
 
     const onChangeConfirmPassword = (e) => {
+        setPasswordError(e.target.value !== password);
         setConfirmPassword(e.target.value);
     };
 
     const onChangeCheckbox = (e) => {
-        setIsCheck(e.target.value);
+        setIsCheckError(!e.target.checked);
+        setIsCheck(e.target.checked);
+    };
+
+    // custom hook
+    // [id, onChangeId] = useInput('');
+    const useInput = (initValue = null) => {
+        const [value, setter] = useState(initValue);
+        const handler = (e) => {
+            setter(e.target.value);
+        };
+        return [value, handler];
     };
 
     return (
         <AppLayout>
             <div>회원가입</div>
-            <Form {...layout} onSubmit={onSubmit}>
+            {/* antd 사용시, onSubmit -> onFinish 로 사용해야 한다. (v4부터) */}
+            {/* https://ant.design/components/form/v3#replace-onSubmit-with-onFinish */}
+            <Form {...layout} onFinish={onFinish}>
                 <Form.Item name="login" label="ID" rules={[{required: true, message: 'Please enter your ID!'}]}>
                     <Input value={login} onChange={onChangeId}/>
                 </Form.Item>
@@ -53,11 +77,21 @@ const Join = () => {
                 <Form.Item name="password" label="Password" rules={[{required: true, message: 'Please enter your Password!'}]}>
                     <Input.Password value={password} onChange={onChangePassword}/>
                 </Form.Item>
-                <Form.Item name="confirm_password" label="Confirm Password" rules={[{required: true, message: 'Please enter your Password!'}]}>
-                    <Input.Password value={confirmPassword} onChange={onChangeConfirmPassword}/>
+                <Form.Item label="Confirm Password">
+                    {/* antd 사용시, Input 엘리먼트에 형제 엘리먼트는 있을 수 없다. Form.Item 태그로 한 번 더 감싼다. */}
+                    {/* https://ant.design/components/form/#components-form-demo-complex-form-control */}
+                    <Form.Item name="confirm_password" rules={[{required: true, message: 'Please enter your Password!'}]}>
+                        <Input.Password value={confirmPassword} onChange={onChangeConfirmPassword}/>
+                    </Form.Item>
+                    {passwordError && <div style={{ color: 'red'}}>Please enter same password!</div>}
                 </Form.Item>
                 <Form.Item wrapperCol={{...layout.wrapperCol, offset: 3}}>
-                    <Checkbox name="is_check" value={isCheck} onChange={onChangeCheckbox}>Check!</Checkbox>
+                    {/* valuePropName="checked" 명시해주어야 한다. */}
+                    {/* https://github.com/ant-design/ant-design/issues/20803 */}
+                    <Form.Item name="is_check" valuePropName="checked">
+                        <Checkbox value={isCheck} onChange={onChangeCheckbox}>Check!</Checkbox>
+                    </Form.Item>
+                    {isCheckError && <div style={{ color: 'red'}}>Please check!</div>}
                 </Form.Item>
                 <Form.Item wrapperCol={{...layout.wrapperCol, offset: 3}}>
                     <Button type="primary" htmlType="submit">Submit</Button>
