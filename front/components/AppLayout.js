@@ -3,6 +3,8 @@ import Link from 'next/link';
 import {Menu, Input, Space, Button} from 'antd';
 
 const {Search} = Input;
+import 'antd/dist/antd.css';
+import PropTypes from 'prop-types';
 
 const AppLayout = ({children}) => {
     return (
@@ -33,5 +35,9 @@ const AppLayout = ({children}) => {
         </div>
     )
 };
+
+AppLayout.propTypes = {
+    children: PropTypes.node,
+}
 
 export default AppLayout;

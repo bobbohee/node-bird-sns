@@ -1,10 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback, memo} from 'react';
 import {Form, Input, Button, Checkbox} from 'antd';
 import 'antd/dist/antd.css';
-
-import AppLayout from "../components/AppLayout";
+import PropTypes from 'prop-types';
 
 // 파일명이 signup.js일 시, js 파일로 인식 못함
+
+const TextInput = memo(({value, onChange}) => {
+    return (
+        <Input value={value} onChange={onChange} />
+    );
+});
+
+TextInput.propTypes = {
+    value: PropTypes.string,
+}
 
 const Join = () => {
     const [login, setLogin] = useState('');
@@ -20,7 +29,7 @@ const Join = () => {
         wrapperCol: {span: 4},
     };
 
-    const onFinish = (e) => {
+    const onFinish = useCallback((e) => {
         if (password !== confirmPassword)
             return setPasswordError(true);
         if (!isCheck)
@@ -28,62 +37,66 @@ const Join = () => {
         console.log({
             login, name, password, confirmPassword, isCheck
         });
-    };
+    }, [password, confirmPassword, isCheck]); // dependency
 
-    const onChangeId = (e) => {
+    const onChangeLogin = useCallback((e) => {
         setLogin(e.target.value);
-    };
+    }, []);
 
-    const onChangeName = (e) => {
+    const onChangeName = useCallback((e) => {
         setName(e.target.value);
-    };
+    }, []);
 
-    const onChangePassword = (e) => {
+    const onChangePassword = useCallback((e) => {
         setPassword(e.target.value);
-    };
+    }, []);
 
-    const onChangeConfirmPassword = (e) => {
+    const onChangeConfirmPassword = useCallback((e) => {
         setPasswordError(e.target.value !== password);
         setConfirmPassword(e.target.value);
-    };
+    }, [password]);
 
-    const onChangeCheckbox = (e) => {
+    const onChangeCheckbox = useCallback((e) => {
         setIsCheckError(!e.target.checked);
         setIsCheck(e.target.checked);
-    };
+    }, []);
 
     // custom hook
     // [id, onChangeId] = useInput('');
     const useInput = (initValue = null) => {
         const [value, setter] = useState(initValue);
-        const handler = (e) => {
+        const handler = useCallback((e) => {
             setter(e.target.value);
-        };
+        });
         return [value, handler];
     };
 
     return (
-        <AppLayout>
+        <>
             <div>회원가입</div>
             {/* antd 사용시, onSubmit -> onFinish 로 사용해야 한다. (v4부터) */}
             {/* https://ant.design/components/form/v3#replace-onSubmit-with-onFinish */}
             <Form {...layout} onFinish={onFinish}>
                 <Form.Item name="login" label="ID" rules={[{required: true, message: 'Please enter your ID!'}]}>
-                    <Input value={login} onChange={onChangeId}/>
+                    {/*<Input value={login} onChange={onChangeId}/>*/}
+                    {/* 리렌더링 방지 */}
+                    <TextInput value={login} onChange={onChangeLogin}/>
                 </Form.Item>
                 <Form.Item name="name" label="Name" rules={[{required: true, message: 'Please enter your Name!'}]}>
                     <Input value={name} onChange={onChangeName}/>
                 </Form.Item>
-                <Form.Item name="password" label="Password" rules={[{required: true, message: 'Please enter your Password!'}]}>
+                <Form.Item name="password" label="Password"
+                           rules={[{required: true, message: 'Please enter your Password!'}]}>
                     <Input.Password value={password} onChange={onChangePassword}/>
                 </Form.Item>
                 <Form.Item label="Confirm Password">
                     {/* antd 사용시, Input 엘리먼트에 형제 엘리먼트는 있을 수 없다. Form.Item 태그로 한 번 더 감싼다. */}
                     {/* https://ant.design/components/form/#components-form-demo-complex-form-control */}
-                    <Form.Item name="confirm_password" rules={[{required: true, message: 'Please enter your Password!'}]}>
+                    <Form.Item name="confirm_password"
+                               rules={[{required: true, message: 'Please enter your Password!'}]}>
                         <Input.Password value={confirmPassword} onChange={onChangeConfirmPassword}/>
                     </Form.Item>
-                    {passwordError && <div style={{ color: 'red'}}>Please enter same password!</div>}
+                    {passwordError && <div style={{color: 'red'}}>Please enter same password!</div>}
                 </Form.Item>
                 <Form.Item wrapperCol={{...layout.wrapperCol, offset: 3}}>
                     {/* valuePropName="checked" 명시해주어야 한다. */}
@@ -91,13 +104,13 @@ const Join = () => {
                     <Form.Item name="is_check" valuePropName="checked">
                         <Checkbox value={isCheck} onChange={onChangeCheckbox}>Check!</Checkbox>
                     </Form.Item>
-                    {isCheckError && <div style={{ color: 'red'}}>Please check!</div>}
+                    {isCheckError && <div style={{color: 'red'}}>Please check!</div>}
                 </Form.Item>
                 <Form.Item wrapperCol={{...layout.wrapperCol, offset: 3}}>
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form.Item>
             </Form>
-        </AppLayout>
+        </>
     );
 };
 
