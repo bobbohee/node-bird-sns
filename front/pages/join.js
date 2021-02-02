@@ -15,6 +15,17 @@ TextInput.propTypes = {
     value: PropTypes.string,
 }
 
+// custom hook
+// [id, onChangeId] = useInput('');
+// import 시, import { useInput } 으로 사용해야함.
+export const useInput = (initValue = null) => {
+    const [value, setter] = useState(initValue);
+    const handler = useCallback((e) => {
+        setter(e.target.value);
+    });
+    return [value, handler];
+};
+
 const Join = () => {
     const [login, setLogin] = useState('');
     const [name, setName] = useState('');
@@ -60,16 +71,6 @@ const Join = () => {
         setIsCheckError(!e.target.checked);
         setIsCheck(e.target.checked);
     }, []);
-
-    // custom hook
-    // [id, onChangeId] = useInput('');
-    const useInput = (initValue = null) => {
-        const [value, setter] = useState(initValue);
-        const handler = useCallback((e) => {
-            setter(e.target.value);
-        });
-        return [value, handler];
-    };
 
     return (
         <>

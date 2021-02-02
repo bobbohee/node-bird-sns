@@ -1,10 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
-import {Menu, Input, Space, Button} from 'antd';
 
+import PropTypes from 'prop-types';
+
+import {Menu, Input, Space, Row, Col} from 'antd';
 const {Search} = Input;
 import 'antd/dist/antd.css';
-import PropTypes from 'prop-types';
+
+import LoginForm from './LoginForm';
+import MyCard from './MyCard';
+
+const dummy = {
+    isLoggedIn: false,
+}
 
 const AppLayout = ({children}) => {
     return (
@@ -26,12 +34,16 @@ const AppLayout = ({children}) => {
                     </Space>
                 </Menu.Item>
             </Menu>
-            <Link href="/join">
-                <a>
-                    <Button>Signup</Button>
-                </a>
-            </Link>
-            {children}
+            <Row>
+                <Col xs={24} md={6}>
+                    {/* 컴포넌트 분리 */}
+                    {dummy.isLoggedIn ? <MyCard/> : <LoginForm/>}
+                </Col>
+                <Col xs={24} md={12}>
+                    {children}
+                </Col>
+                <Col xs={24} md={6}></Col>
+            </Row>
         </div>
     )
 };
