@@ -34,7 +34,7 @@ const AppLayout = ({children}) => {
                     </Space>
                 </Menu.Item>
             </Menu>
-            <Row>
+            <Row gutter={10}>
                 <Col xs={24} md={6}>
                     {/* 컴포넌트 분리 */}
                     {dummy.isLoggedIn ? <MyCard/> : <LoginForm/>}

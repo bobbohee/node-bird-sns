@@ -15,7 +15,7 @@ const LoginForm = () => {
     }, [login, password]);
 
     return (
-        <Form onFinish={onFinish}>
+        <Form onFinish={onFinish} style={{padding: '10px 20px'}}>
             <Form.Item name="login" label="ID" rules={[{required: true, message: 'Please enter your ID!'}]}>
                 <Input value={login} onChange={onChangeLogin}/>
             </Form.Item>
