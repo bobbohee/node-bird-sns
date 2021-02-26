@@ -10,7 +10,7 @@ const dummy = {
     Followers: [],
 }
 
-const MyCard = () => {
+const UserProfile = () => {
     return (
         <Card
             actions={[
@@ -27,4 +27,4 @@ const MyCard = () => {
     );
 };
 
-export default MyCard;
+export default UserProfile;

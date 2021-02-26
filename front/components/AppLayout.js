@@ -8,7 +8,7 @@ const {Search} = Input;
 import 'antd/dist/antd.css';
 
 import LoginForm from './LoginForm';
-import MyCard from './MyCard';
+import UserProfile from './UserProfile';
 
 const dummy = {
     isLoggedIn: false,
@@ -37,7 +37,7 @@ const AppLayout = ({children}) => {
             <Row gutter={10}>
                 <Col xs={24} md={6}>
                     {/* 컴포넌트 분리 */}
-                    {dummy.isLoggedIn ? <MyCard/> : <LoginForm/>}
+                    {dummy.isLoggedIn ? <UserProfile/> : <LoginForm/>}
                 </Col>
                 <Col xs={24} md={12}>
                     {children}
